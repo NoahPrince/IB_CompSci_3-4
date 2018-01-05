@@ -1,0 +1,131 @@
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.Group;
+import javafx.stage.Stage;
+import javafx.scene.shape.*;
+import javafx.scene.paint.Color;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import javafx.animation.AnimationTimer;
+
+public class Prince_AnalogClock extends Application {
+    public static void main(String[] args) {
+		launch(args);
+    }//main
+    @Override
+    public void start(Stage primaryStage) {
+    	primaryStage.setTitle("Analog Clock");//header of the stage
+		Group root = new Group();
+		Scene scene = new Scene(root,504,504); //sets the scene size
+		Line tick[] = new Line[60];
+		Text text[] = new Text[60];
+		double radian = 0;
+		String t3 = "";
+	
+		Text digitalText = new Text();// creates the text for the digital clock
+		digitalText.setFont(Font.font(20));
+		digitalText.setX(218);
+		digitalText.setY(400);
+		
+		Circle circle = new Circle(252,252,250);//creating a new circle with a black border with a width of 2
+		circle.setStroke(Color.BLACK);
+		circle.setFill(null);
+		circle.setStrokeWidth(2);
+		
+		Circle smallCircle = new Circle(252,252,5);//creating a black inner circle
+		smallCircle.setFill(Color.BLACK);
+		
+		Line second = new Line();//creating line for second hand
+		second.setStroke(Color.RED);
+		second.setStrokeWidth(3);
+		
+		Line minute = new Line();//creating minute hand
+		minute.setStrokeWidth(3);
+		
+		Line hour = new Line();//creating hour hand
+		hour.setStrokeWidth(3);
+		
+		for (int x=0; x < 60; x++){
+			radian = Math.toRadians(x * 6);
+			if(x%5 == 0){//this makes every 5th tick bigger, so that you can distinguish the lines for the number 1 through 12
+				if ((18 - x / 5) > 12){
+					t3 = "" + ((18 - x / 5) - 12);
+				}else{
+					t3 = "" + (18 - x / 5);
+				}//else
+					
+				double l1 = ((252) + (Math.sin(radian) * 250));
+				double l2 = ((252) - (Math.cos(radian) * 250));
+				double l3 = ((252) + (Math.sin(radian) * 220));
+				double l4 = ((252) - (Math.cos(radian) * 220));
+				double t1 = (249 + 203 * (Math.sin(radian)));
+				double t2 = (256 + 203 * (Math.cos(radian)));
+				
+				tick[x] = new Line(l1, l2, l3, l4);//sets the coordiantes for every 5th tick on the clock face
+				tick[x].setStrokeWidth(3);
+				text[x] = new Text(t1, t2, t3);//sets the coordinates for the 1-12 numbers every 5th tick
+				root.getChildren().addAll(tick[x], text[x]);
+			}else{
+				double l5 = ((252) + (Math.sin(radian) * 250));
+				double l6 = ((252) - (Math.cos(radian) * 250));
+				double l7 = ((252) + (Math.sin(radian) * 240));
+				double l8 = ((252) - (Math.cos(radian) * 240));
+				
+				tick[x] = new Line(l5, l6, l7, l8);//sets coordiantes for all the other ticks on the clock face
+				tick[x].setStrokeWidth(2);
+				root.getChildren().add(tick[x]);
+			}//else
+		}//for
+		root.getChildren().addAll(circle, digitalText, second, minute, hour, smallCircle);//displays everything onto the scene
+		
+		primaryStage.setScene(scene);
+        primaryStage.show();//shows the scene
+		
+		new AnimationTimer() {
+		@Override
+			public void handle(long now) {
+				SimpleDateFormat hou = new SimpleDateFormat("hh");
+				SimpleDateFormat min = new SimpleDateFormat("mm");
+				SimpleDateFormat sec = new SimpleDateFormat("ss");
+				
+				Date digiHour = Calendar.getInstance().getTime();//get time for digital clock
+				Date digiMinute = Calendar.getInstance().getTime();
+				Date digiSecond = Calendar.getInstance().getTime();
+				
+				String houTime = hou.format(digiHour);//formats the time just grabbed and puts it into a string
+				String minTime = min.format(digiMinute);
+				String secTime = sec.format(digiSecond);
+				houTime = String.valueOf(Integer.valueOf(houTime));//converts the hour string to an integer, then back to a string to remove the 0 in front of a time such as 01:20:34
+				Date time = new Date();
+				
+				int s = 0;
+				int m = 0;
+				int h = 0;
+				
+				s = Integer.parseInt(sec.format(time));//converts the minutes, seconds, and hours into ints
+                m = Integer.parseInt(min.format(time));
+                h = Integer.parseInt(hou.format(time));
+				
+				digitalText.setText(houTime + ":" + minTime + ":" + secTime);//sets the digital clock to be displayed on the scene
+				
+                second.setStartX(252);//Sets the starting and ending coordiantes for the second hand
+                second.setStartY(252);
+                second.setEndX(252 + (200 * Math.sin(Math.toRadians(6 * s))));
+                second.setEndY(252 + (252 - (252 + (200 * Math.cos(Math.toRadians(6 * s))))));
+				
+                minute.setStartX(252);//Sets the starting and ending coordiantes for the minute hand
+                minute.setStartY(252);
+                minute.setEndX(252 + (180 * Math.sin(Math.toRadians(6 * m))));
+                minute.setEndY(252 + (252 - (252 + (180 * Math.cos(Math.toRadians(6 * m))))));
+				
+                hour.setStartX(252);//Sets the starting and ending coordiantes for the hour hand
+                hour.setStartY(252);
+                hour.setEndX(252 + (120 * Math.sin(Math.toRadians(30 * h))));
+                hour.setEndY(252 + (252 - (252 + (120 * Math.cos(Math.toRadians(30 * h))))));
+			}//handle
+		}.start();//AnimationTimer
+    }//start
+}//Prince_AnalogClock
