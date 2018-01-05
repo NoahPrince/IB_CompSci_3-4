@@ -1,0 +1,191 @@
+import javax.swing.JFrame;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+
+public class Prince_SudokuSolver extends JFrame{
+    private final SudokuPanel panel;
+    public Prince_SudokuSolver(){
+        this.setTitle("Sudoku Solver");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        panel = new SudokuPanel();
+        add(panel);
+        pack();
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setVisible(true);
+    }//SudokuSolver
+    
+    public static void main(String args[]){
+        Prince_SudokuSolver sudoku = new Prince_SudokuSolver();
+    }//main
+}//SudokuSolver
+
+final class SudokuPanel extends JPanel{
+    public int xPos = 9;
+    public int yPos = 9;
+    public boolean solved;
+    public boolean[][] list;
+    public int[][] values;
+    public JButton clear;
+    public JButton solve;
+    public JButton exit;
+    JTable table;
+    
+    SudokuPanel(){//setting the background up
+        setPreferredSize(new Dimension(360, 400));
+        setLayout(new BorderLayout());
+        setBackground(Color.white);
+        setGame();
+    }//SudokuPanel
+    
+    public void resetGame(){//if restetGame is called on, set all values in the boxes to nothing
+        solved = false;
+        for(int y = 0; y < yPos; y++){
+            for(int x = 0; x < xPos; x++){
+                table.setValueAt("", y, x);
+                values[y][x] = -1;
+                list[y][x] = false;
+            }//for
+        }//for
+    }//resetGame
+    
+    public void setGame(){
+        list = new boolean[yPos][xPos];
+        values = new int[yPos][xPos];
+        
+        //Sets up all buttons
+        
+        clear = new JButton("Clear");
+        solve = new JButton("Solve");
+        exit = new JButton("Exit");
+        
+        clear.setBackground(Color.white);
+        solve.setBackground(Color.white);
+        exit.setBackground(Color.white);
+        
+        clear.setForeground(Color.black);
+        solve.setForeground(Color.black);
+        exit.setForeground(Color.black);
+        
+        clear.setFont(new Font("Verdana", Font.BOLD, 15));
+        solve.setFont(new Font("Verdana", Font.BOLD, 15));
+        exit.setFont(new Font("Verdana", Font.BOLD,15));
+        
+        //sets up the sudoku table and its formatting
+        
+        table = new JTable(9,9);
+        table.setRowHeight(40);
+        table.setFont(new Font("Verdana", Font.BOLD, 45));
+        table.setBackground(Color.white);
+        table.setForeground(Color.black);
+        table.setCellSelectionEnabled(false);
+        
+        add(table, BorderLayout.NORTH);
+        add(clear, BorderLayout.WEST);
+        add(exit, BorderLayout.EAST);
+        add(solve, BorderLayout.CENTER);
+        
+        resetGame();//when game is initialized, this makes the squares empty
+        
+        //setting up action listeners for button presses, and actions that the buttons take depending on the button press
+        
+        clear.addActionListener((ActionEvent e) -> {
+            resetGame();
+        });//clear
+        
+        solve.addActionListener((ActionEvent e) -> {
+            getText();
+        });//solve
+        
+        exit.addActionListener((ActionEvent e) -> {
+                System.exit(0);
+        });//exit
+        setFocusable(true);
+    }//setGame
+    
+   public void getText(){//converts the values found at the specific x and y coordinates into an int
+        for(int y = 0; y < yPos; y++){
+            for(int x = 0; x < xPos; x++){
+                if(table.getValueAt(y,x) != ""){
+                    values[y][x] = Integer.parseInt(table.getValueAt(y,x).toString());
+                    list[y][x] = true;
+                }else{
+                    values[y][x] = -1;
+                }//else
+            }//for
+        }//for
+        solve(0, 0);//calls on the process to start the solving
+    }//getText
+    
+    public boolean check(int y, int x, int num){
+        for(int a = 0; a < xPos; a++){
+            if(values[y][a] == num){
+                return false;
+            }//if
+        }//for
+        
+        for(int b = 0; b < yPos; b++){
+            if(values[b][x] == num){
+                return false;
+            }//if
+        }//for
+        
+        int newY = (y / 3) * 3;
+        int newX = (x / 3) * 3;
+        
+        for(int c = newY; c < newY + 3; c++){
+            for(int d = newX; d < newX + 3; d++){
+                if(values[c][d] == num){
+                    return false;
+                }//if
+            }//for
+        }//for
+        return true;
+    }//check
+    
+    public void setText(){//sets the proper values to the proper box
+        for(int y = 0; y < yPos; y++){
+            for(int x = 0; x < xPos; x++){
+                table.setValueAt(values[y][x], y, x);
+            }//for
+        }//for
+    }//setText
+    
+    public void solve(int y, int x){//the backtracking process used to solve the sudoku puzzle
+        if(solved){
+            return;
+        }//if
+        if(y == 9){
+            setText();
+            solved = true;
+            return;
+        }//if
+        if(list[y][x]){
+            if(x < 8){
+                solve(y, x + 1);
+            }//if
+            else if(x == 8){
+                solve(y + 1, 0);
+            }//elseif
+        }else{
+            for(int num = 1; num <= 9; num++){
+                if(check(y, x, num)){
+                    values[y][x] = num;
+                    if(x < 8){
+                        solve(y, x + 1);
+                    }//if
+                    else if(x == 8){
+                        solve(y + 1, 0);
+                    }//elseif
+                    values[y][x] = 0;
+                }//if
+            }//for
+        }//else
+    }//solve
+}//Prince_SudokuSolver
