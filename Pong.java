@@ -1,4 +1,4 @@
-package Pong2;
+package Pong;
 
 import java.applet.Applet;
 import java.awt.Color;
@@ -10,16 +10,19 @@ public class Pong extends Applet implements Runnable, KeyListener{
     final int WIDTH = 700;
     final int HEIGHT = 500;
     Thread thread;
+    HumanPaddle pl;
     
     public void init(){
         this.resize(WIDTH, HEIGHT);
         this.addKeyListener(this);
+        p1 = new HumanPaddle(1);
         thread = new Thread(this);
         thread.start();
     }
     public void paint(Graphics g){
       g.setColor(Color.black);
       g.fillRect(0 ,0, WIDTH, HEIGHT);
+      p1.draw(g);
     }
     
     public void update(Graphics g){
