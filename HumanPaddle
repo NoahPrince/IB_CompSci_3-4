@@ -3,8 +3,9 @@ package Pong;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class HumanPaddle implements Paddle{
+public class HumanPaddle extends Paddle{
     double y;
+    final double gravity = 0.94;
     double yVelocity;
     boolean upAccel;
     boolean downAccel;
@@ -27,6 +28,30 @@ public class HumanPaddle implements Paddle{
     }
     
     public void move(){
+        if (upAccel){
+            yVelocity -= 2;
+        }
+        else if (downAccel){
+            yVelocity += 2;
+        }
+        else if (!upAccel && !downAccel){
+           // yVelocity += gravity;
+        }
+        if (yVelocity >= 5){
+            yVelocity = 5;
+        }
+        if (yVelocity <= -5){
+            yVelocity = -5;
+        }
+        
+        y += yVelocity;
+        
+        if (y < 0){
+            y = 0;
+        } 
+        if (y > 420){
+            y = 420;
+        }
         
     }
     public void setUpAccel(boolean input){
