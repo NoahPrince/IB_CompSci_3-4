@@ -1,0 +1,61 @@
+package Pong;
+
+import java.awt.Color;
+import java.awt.Graphics;
+
+public class Player1 extends Paddle{
+    double y;
+    final double GRAVITY = 0.94;
+    double yVelocity;
+    boolean upAccel;
+    boolean downAccel;
+    int player;
+    int x;
+    
+    public Player1(int human1){
+        upAccel = false;
+        downAccel = false;
+        y = 210;
+        x = 20;
+    }//Player1
+    public void draw(Graphics g){
+        g.setColor(Color.white);
+        g.fillRect(x,(int)y, 10, 80);
+    }//draw
+    
+    public void move(){
+        if (upAccel == true){
+            yVelocity = -1.5;
+        }//if
+        else if (downAccel == true){
+            yVelocity = 1.5;
+        }//else if
+        else if (!upAccel && !downAccel){
+           yVelocity *= GRAVITY;
+        }//else if
+        if (yVelocity >= 5){
+            yVelocity = 5;
+        }//if
+        if (yVelocity <= -5){
+            yVelocity = -5;
+        }//if
+        
+        y += yVelocity;
+        
+        if (y < 0){
+            y = 0;
+        }//if
+        if (y > 420){
+            y = 420;
+        }//if
+    }//move
+    public void setUpAccel(boolean input1){
+        upAccel = input1;
+    }//setUpAccel
+    public void setDownAccel(boolean input2){
+        downAccel = input2;
+    }//setDownAccel
+    public int getY(){
+        return (int)y;
+    }//getY
+}//Player1
