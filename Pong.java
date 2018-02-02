@@ -15,6 +15,8 @@ public class Pong extends Applet implements Runnable, KeyListener{
     final int height = 500;
     int p1Score;
     int p2Score;
+    int finalScoreP1;
+    int finalScoreP2;
     boolean gameTitle;
     boolean gameStarted;
     boolean gameEnd;
@@ -26,7 +28,6 @@ public class Pong extends Applet implements Runnable, KeyListener{
     Player1 p1;
     Player2 p2;
     Ball b;
-    
     
     public void init(){//assigns values to the variables
         this.resize(width, height);
@@ -100,15 +101,23 @@ public class Pong extends Applet implements Runnable, KeyListener{
             }//if
         }//if
         
-        if(p1Score == 11){//if player 1 score equals 11, display winning screen
-            gfx.setFont(titleFont);
-            gfx.setColor(Color.red);
-            gfx.drawString("Player 1 Wins!", 245, 150);
-        }//if
-        if(p2Score == 11){//if player 2 score equals 11, display winning screen
-            gfx.setFont(titleFont);
-            gfx.setColor(Color.red);
-            gfx.drawString("Player 2 Wins!", 245, 150);
+        if(gameEnd){
+            gfx.setColor(Color.black);
+            gfx.fillRect(0, 0, width, height);
+            if(p1Score == 11){//if player 1 score equals 11, display winning screen
+                gfx.setFont(titleFont);
+                gfx.setColor(Color.red);
+                gfx.drawString("Player 1 Wins!", 245, 150);
+            }//if
+            if(p2Score == 11){//if player 2 score equals 11, display winning screen
+                gfx.setFont(titleFont);
+                gfx.setColor(Color.red);
+                gfx.drawString("Player 2 Wins!", 245, 150);
+            }//if
+            gfx.setColor(Color.white);
+            gfx.setFont(regFont);
+            gfx.drawString("The Final Score Was " + Integer.toString(p1Score) + " to " + Integer.toString(p2Score), 235, 200);
+            gfx.drawString("Press Backspace to go Back to the Title Screen", 145, 250);
         }//if
         g.drawImage(img, 0, 0, this);//displays image created, without previous glitches
     }//paint
@@ -139,12 +148,18 @@ public class Pong extends Applet implements Runnable, KeyListener{
                 p1Score++;
                 gameStarted = false;
             }//if
-            /*if(p1Score == 11){
+            if(p1Score == 11){
+                p1.reset();
+                p2.reset();
+                b.reset();
                 gameEnd = true;
             }//if
             if(p2Score == 11){
+                p1.reset();
+                p2.reset();
+                b.reset();
                 gameEnd = true;
-            }//if*/
+            }//if
           
             repaint();
             try {
@@ -177,6 +192,17 @@ public class Pong extends Applet implements Runnable, KeyListener{
                 gameStarted = true;
             }//if
         }//if
+        if(gameEnd){
+            if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+                gameTitle = false;
+                p1Score = 0;
+                p2Score = 0;
+                p1.reset();
+                p2.reset();
+                b.reset();
+                gameEnd = false;
+            }
+        }
     }//keyPressed
 
     @Override
@@ -199,3 +225,5 @@ public class Pong extends Applet implements Runnable, KeyListener{
     public void keyTyped(KeyEvent e) {//not used in this program
     }//keyTyped
 }//pong
+
+//once the project is finished, email tinling at rtinling@pps.net
