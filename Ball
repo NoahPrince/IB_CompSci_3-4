@@ -1,0 +1,72 @@
+package Pong;
+
+import java.awt.Color;
+import java.awt.Graphics;
+
+public class Ball {
+    //creating variables for the ball
+    double xVelocity;
+    double yVelocity;
+    double x;
+    double y;
+    boolean gameStop;
+    
+    public Ball(){//setting values to the variables
+        x = 350;
+        y = 250;
+        gameStop = false;
+        xVelocity = -2.25 * getRandomDirection();
+        yVelocity = 1.5 * getRandomDirection();
+    }//Ball
+    
+    public int getRandomDirection(){//creates a random direction for the ball to go when the game starts, so it isn't always serving to the same person every game
+        int random = (int)(Math.random() * 2);
+        if(random == 1){
+            return 1;
+        }else{
+            return -1;
+        }//else
+    }//getRandomDirection
+    
+    public void draw(Graphics g){//draws the oval for the ball
+        g.setColor(Color.white);
+        g.fillOval((int)x-10, (int)y-10, 20, 20);
+    }//draw
+    
+    public void checkCollision(Paddle p1, Paddle p2){//checks for collisions between player 1 and 2 paddles with the ball, to see if the ball should bounce back
+        if(x <= 40){//makes sure that the x axis is set to where the front of the paddle would be
+            if(y >= p1.getY() && y <= p1.getY() + 80)//makes sure that if the ball is hitting ANY PART of the paddle, then turn the ball around
+                xVelocity = -xVelocity;//reverses the velocity, which turns the ball around
+        }//if
+        else if(x >= 660){//makes sure that the x axis is set to where the front of the paddle would be
+            if(y >= p2.getY() && y <= p2.getY() + 80)//makes sure that if the ball is hitting ANY PART of the paddle, then turn the ball around
+                xVelocity = -xVelocity;//reverses the velocity, which turns the ball around
+        }//else if
+    }//checkCollision
+    
+    public void move(){//move method for the balls movement
+        
+        x += xVelocity;
+        y += yVelocity;
+        
+        if(y < 10){//keeps the ball from moving off the screen in the y axis
+            yVelocity = -yVelocity;
+        }//if
+        if(y > 490){//keeps the ball from moving off the screen in the y axis
+            yVelocity = -yVelocity;
+        }//if
+    }//move
+    
+    public void reset(){// when reset is called, resets the velocity and the starting point of the ball
+        xVelocity = -2.25 * getRandomDirection();
+        yVelocity = 1.5 * getRandomDirection();
+        x = 350;
+        y = 250;
+    }//reset
+    public int getX(){//allows the x axis for the ball to be accessable from any class
+        return (int)x;
+    }//getX
+    public int getY(){//allows the y axis for the ball to be accessable from any class
+        return (int)y;
+    }//getY
+}//Ball
