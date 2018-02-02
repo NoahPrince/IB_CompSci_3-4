@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Player2 extends Paddle{
+    //creates variables for the paddle
     double y;
     final double GRAVITY = 0.94;
     double yVelocity;
@@ -12,50 +13,54 @@ public class Player2 extends Paddle{
     int player;
     int x;
     
-    public Player2(int human2){
+    public Player2(int human2){//setting values to the variables
         upAccel = false;
         downAccel = false;
         y = 210;
-        x = 640;
+        x = 670;
     }//Player2
-    public void draw(Graphics g){
+    public void draw(Graphics g){//draws the rectangle for paddle 2
         g.setColor(Color.white);
         g.fillRect(x,(int)y,10,80);
     }//draw
     
     public void move(){
-        if (upAccel == true){
-            yVelocity = -1.5;
+        if (upAccel == true){//if the up key is pressed, move the paddle up
+            yVelocity = -2;
         }//if
-        else if (downAccel == true){
-            yVelocity = 1.5;
+        else if (downAccel == true){//else move the paddle down
+            yVelocity = 2;
         }//else if
-        else if (!upAccel && !downAccel){
+        else if (!upAccel && !downAccel){//sets a gravity to the paddle so that it doesn't stop immediatly
            yVelocity *= GRAVITY;
         }//else if
-        if (yVelocity >= 5){
+        if (yVelocity >= 5){//sets a max limit on the speed of the paddle
             yVelocity = 5;
         }//if
-        if (yVelocity <= -5){
+        if (yVelocity <= -5){//sets a max limit on the speed of the paddle
             yVelocity = -5;
         }//if
         
         y += yVelocity;
         
-        if (y < 0){
+        if (y < 0){//makes sure that the paddle can't go off the screen
             y = 0;
         }//if
-        if (y > 420){
+        if (y > 420){//makes sure that the paddle can't go off the screen
             y = 420;
         }//if
     }//move
-    public void setUpAccel(boolean input1){
+    
+    public void reset(){//when called on, reset the paddle location to the default location
+        y=210;
+    }//reset
+    public void setUpAccel(boolean input1){//boolean used to control up movement
         upAccel = input1;
     }//setUpAccel
-    public void setDownAccel(boolean input2){
+    public void setDownAccel(boolean input2){//boolean used to control down movement
         downAccel = input2;
     }//setDownAccel
-    public int getY(){
+    public int getY(){//allows y axis of the paddle to be accessable by any other class
         return (int)y;
     }//getY
 }//Player2
