@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Player1 extends Paddle{
+    //creating variables for the paddle
     double y;
     final double GRAVITY = 0.94;
     double yVelocity;
@@ -12,50 +13,54 @@ public class Player1 extends Paddle{
     int player;
     int x;
     
-    public Player1(int human1){
+    public Player1(int human1){//setting values to the variables
         upAccel = false;
         downAccel = false;
         y = 210;
         x = 20;
     }//Player1
-    public void draw(Graphics g){
+    public void draw(Graphics g){//draws the rectangle for paddle 1
         g.setColor(Color.white);
         g.fillRect(x,(int)y, 10, 80);
     }//draw
     
     public void move(){
-        if (upAccel == true){
-            yVelocity = -1.5;
+        if (upAccel == true){//if the up key is pressed in the Pong class, change the velocity of the paddle to up
+            yVelocity = -2;
         }//if
-        else if (downAccel == true){
-            yVelocity = 1.5;
+        else if (downAccel == true){//otherwise change the velocity to down
+            yVelocity = 2;
         }//else if
-        else if (!upAccel && !downAccel){
+        else if (!upAccel && !downAccel){//adds a gravity for the paddle, sop it doesn't come to an immediate stop, but slowly stops moving
            yVelocity *= GRAVITY;
         }//else if
-        if (yVelocity >= 5){
+        if (yVelocity >= 5){//sets a max limit on velocity
             yVelocity = 5;
         }//if
-        if (yVelocity <= -5){
+        if (yVelocity <= -5){//sets a max limit on velocity
             yVelocity = -5;
         }//if
         
         y += yVelocity;
         
-        if (y < 0){
+        if (y < 0){// keeps the paddle from going off screen
             y = 0;
         }//if
-        if (y > 420){
+        if (y > 420){//keeps the paddle from going off screen
             y = 420;
         }//if
     }//move
-    public void setUpAccel(boolean input1){
+    
+    public void reset(){//when reset is called on, change the y axis back to default
+        y=210;
+    }//reset
+    public void setUpAccel(boolean input1){// boolean for controlling up movement
         upAccel = input1;
     }//setUpAccel
-    public void setDownAccel(boolean input2){
+    public void setDownAccel(boolean input2){//boolean used to control down movement
         downAccel = input2;
     }//setDownAccel
-    public int getY(){
+    public int getY(){//allowes any other class to access the y coordinate of the paddle
         return (int)y;
     }//getY
 }//Player1
