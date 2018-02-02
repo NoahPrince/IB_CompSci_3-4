@@ -2,8 +2,8 @@ package Pong;
 
 import java.awt.Graphics;
 
-public class Paddle {
+public class Paddle {//helps set up shared methods
     public void draw(Graphics g);
     public void move();
     public int getY();
-}
+}//Paddle
