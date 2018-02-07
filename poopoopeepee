@@ -1,0 +1,41 @@
+/*7 * File: TipCalculator.java
+ * Author:
+ * 
+ * Write a program to  request a meal subtotal from a user,
+ * suggest three different tip amounts, ask the user for 
+ * the total payment, and report the amount tipped.
+ */
+
+import java.util.*;
+import java.util.Scanner;
+
+public class TipCalculator {
+
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("This program helps you calculate the tip on your meal.");
+        System.out.print("Subtotal: $");
+        double subtotal = input.nextDouble();
+        double tax = (subtotal*0.056);
+        System.out.println("Tax (5.6%): " + tax);
+        double balance = (tax+subtotal);
+        System.out.println("Balance due: $" + (balance));
+
+        System.out.println(" ");
+        System.out.println("Suggested tip amounts are provided for your convenience.");
+        System.out.println("15.0% = " + (subtotal*.15));
+        System.out.println("18.0% = " + (subtotal*.18));
+        System.out.println("20.0% = " + (subtotal*.20));
+
+        System.out.print("Enter total payment: $");
+        double tipped = input.nextDouble();
+        while(tipped < subtotal){
+            System.out.println("Your subtotal is greater than your total payment, please enter your total payment again");
+            tipped = input.nextDouble();
+        }//while
+            double tipAmount = ((tipped-balance)/subtotal)*100;
+            System.out.println("You tipped " + (tipAmount) + "% Thanks! Come again.");
+    }//main
+}//TipCalculator
